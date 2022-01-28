@@ -8,7 +8,13 @@ import '@pwabuilder/pwainstall';
 export class AppHome extends LitElement {
   // For more information on using properties and state in lit
   // check out this link https://lit.dev/docs/components/properties/
-  @property() message = 'Inclinometer';
+  @property() message = '';
+
+  @property() bleConnected = false;
+  @property() deviceName = "";
+
+  @property() pitch = 0;
+  @property() roll = 0;
 
   static get styles() {
     return css`
@@ -99,6 +105,44 @@ export class AppHome extends LitElement {
     }
   }
 
+  bleConnect() {
+    if (this.bleConnected) {
+      console.log('Already connected');
+      return;
+    }
+
+    console.log('Connecting');
+
+    this.bleConnected = true;
+  }
+
+  bleDisconnect() {
+    if (!this.bleConnected) {
+      console.log('Already disconnected');
+      return;
+    }
+
+    console.log('Disconnecting');
+
+    this.bleConnected = false;
+    this.deviceName = "";
+  }
+
+  winchChange(event: Event) {
+    let sliderValue = event.target._value;
+    console.log("Winch control value " + sliderValue);
+    if (sliderValue == 0) {
+      console.log("Winch stop");
+
+    } else if (sliderValue == -100) {
+      console.log("Winch in");
+
+    } else if (sliderValue == 100) {
+      console.log("Winch out");
+
+    }
+  }
+
   render() {
     return html`
       <app-header></app-header>
@@ -106,9 +150,21 @@ export class AppHome extends LitElement {
       <div>
         <div id="welcomeBar">
           <fluent-card id="welcomeCard">
-            <h2>${this.message}</h2>
+            <h2>Device</h2>
+            <fluent-button appearance="neutral" @click="${this.bleConnect}" ?disabled="${this.bleConnected}">Connect</fluent-button>
+            <fluent-button appearance="neutral" @click="${this.bleDisconnect}" ?disabled="${!this.bleConnected}">Disconnect</fluent-button>
+            <span>
+              ${this.deviceName}
+            </span>
+          </fluent-card>
 
+          <fluent-card id="infoCard">
+            <h2>Inclinometer</h2>
             <p>
+              Pitch: ${this.pitch}
+            </p>
+            <p>
+              Roll: ${this.roll}
             </p>
 
             ${'share' in navigator
@@ -120,9 +176,19 @@ export class AppHome extends LitElement {
 
           <fluent-card id="infoCard">
             <h2>Winch</h2>
-
-            <ul>
-            </ul>
+            <p>
+              <fluent-slider min="-100" max="100" value="0" step="100" style="max-width: 300px;" title="Winch control" @change="${this.winchChange}">
+                <fluent-slider-label position="-100">
+                  in
+                </fluent-slider-label>
+                <fluent-slider-label position="0">
+                  stop
+                </fluent-slider-label>
+                <fluent-slider-label position="100">
+                  out
+                </fluent-slider-label>
+              </fluent-slider>
+            </p>
           </fluent-card>
 
           <!-- fluent-anchor href="/about" appearance="accent">Navigate to About</fluent-anchor -->
