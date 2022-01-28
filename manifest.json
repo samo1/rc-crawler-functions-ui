@@ -1,10 +1,10 @@
 {
-  "name": "PWA Starter",
+  "name": "RC crawler functions",
   "display": "standalone",
   "start_url": "/",
   "short_name": "starter",
   "theme_color": "#E1477E",
-  "description": "This is a PWA Starter app",
+  "description": "Control additional devices on RC rock crawler car, like a winch or inclinometer.",
   "orientation": "any",
   "background_color": "#E1477E",
   "related_applications": [],

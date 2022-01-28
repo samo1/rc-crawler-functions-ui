@@ -1,7 +1,7 @@
 {
-  "name": "pwa-starter",
+  "name": "rc-crawler-functions-ui",
   "version": "0.0.1",
-  "description": "A starter kit for building PWAs!",
+  "description": "Control additional devices on RC rock crawler car, like a winch or inclinometer.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,8 +10,8 @@
     "dev": "concurrently \"rollup --config rollup.config.dev.js --watch\" \"web-dev-server --app-index build/index.html --root-dir build/ --compatibility none --node-resolve --watch --open /\"",
     "dev-task": "concurrently \"rollup --config rollup.config.dev.js --watch\" \"web-dev-server --app-index build/index.html --root-dir build/ --compatibility none --node-resolve --watch /\""
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Samuel Valis",
+  "license": "AGPL-3.0-or-later",
   "dependencies": {
     "@pwabuilder/pwainstall": "^1.6.7",
     "@vaadin/router": "^1.7.4",
