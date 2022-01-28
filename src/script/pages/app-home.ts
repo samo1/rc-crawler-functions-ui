@@ -3,6 +3,7 @@ import { property, customElement } from 'lit/decorators.js';
 
 // For more info on the @pwabuilder/pwainstall component click here https://github.com/pwa-builder/pwa-install
 import '@pwabuilder/pwainstall';
+import { DeviceConnector } from '../device-connector';
 
 @customElement('app-home')
 export class AppHome extends LitElement {
@@ -15,6 +16,8 @@ export class AppHome extends LitElement {
 
   @property() pitch = 0;
   @property() roll = 0;
+
+  private bluetoothCharacteristics: BluetoothRemoteGATTCharacteristic[];
 
   static get styles() {
     return css`
@@ -105,7 +108,7 @@ export class AppHome extends LitElement {
     }
   }
 
-  bleConnect() {
+  async bleConnect() {
     if (this.bleConnected) {
       console.log('Already connected');
       return;
@@ -113,7 +116,16 @@ export class AppHome extends LitElement {
 
     console.log('Connecting');
 
+    this.bluetoothCharacteristics = await DeviceConnector.connect(this.handleGattDisconnect.bind(this));
+
     this.bleConnected = true;
+  }
+
+  private async handleGattDisconnect() {
+    console.log('Disconnected');
+
+    this.bleConnected = false;
+    this.deviceName = "";
   }
 
   bleDisconnect() {
@@ -123,6 +135,8 @@ export class AppHome extends LitElement {
     }
 
     console.log('Disconnecting');
+
+    DeviceConnector.disconnect();
 
     this.bleConnected = false;
     this.deviceName = "";
