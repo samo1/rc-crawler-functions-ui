@@ -20,7 +20,7 @@ export class DeviceConnector {
       await disconnectCallback();
     });
 
-    const server = await DeviceConnector.device.gatt.connect();
+    const server = await DeviceConnector.device.gatt!.connect();
     const service = await server.getPrimaryService(UNIT_SERVICE_UUID);
     const pitchRollCharacteristic = await service.getCharacteristic(PITCH_ROLL_CHARACTERISTIC_UUID);
     const winchControlCharacteristic = await service.getCharacteristic(WINCH_CONTROL_CHARACTERISTIC_UUID);
@@ -29,7 +29,7 @@ export class DeviceConnector {
 
   public static disconnect(): boolean {
     if (DeviceConnector.device) {
-      DeviceConnector.device.gatt.disconnect();
+      DeviceConnector.device.gatt!.disconnect();
       return true;
     }
     return false;
