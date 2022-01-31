@@ -126,6 +126,7 @@ export class AppHome extends LitElement {
     this.pitchRollCharacteristic.addEventListener('characteristicvaluechanged', this.handlePitchRollChanged);
 
     setTimeout(() => {
+      console.log('Starting to receive pitch roll change notifications');
       this.pitchRollCharacteristic?.startNotifications();
     }, 1000);
   }
@@ -167,16 +168,22 @@ export class AppHome extends LitElement {
 
   winchChange(event: Event) {
     let sliderValue = event.target!.value;
-    console.log("Winch control value " + sliderValue);
-    if (sliderValue == 0) {
-      console.log("Winch stop");
-
-    } else if (sliderValue == -100) {
+    console.log("Winch control slider value " + sliderValue);
+    const textEncoder = new TextEncoder();
+    if (sliderValue == -100) {
       console.log("Winch in");
+      const value = textEncoder.encode('in');
+      this.winchControlCharacteristic?.writeValue(value);
 
     } else if (sliderValue == 100) {
       console.log("Winch out");
+      const value = textEncoder.encode('out');
+      this.winchControlCharacteristic?.writeValue(value);
 
+    } else {
+      console.log("Winch stop");
+      const value = textEncoder.encode('stop');
+      this.winchControlCharacteristic?.writeValue(value);
     }
   }
 
