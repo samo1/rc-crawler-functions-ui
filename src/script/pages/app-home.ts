@@ -14,10 +14,11 @@ export class AppHome extends LitElement {
   @property() bleConnected = false;
   @property() deviceName = "";
 
-  @property() pitch = 0;
-  @property() roll = 0;
+  @property() pitch = 0.0;
+  @property() roll = 0.0;
 
-  private bluetoothCharacteristics: BluetoothRemoteGATTCharacteristic[];
+  private pitchRollCharacteristic?: BluetoothRemoteGATTCharacteristic;
+  private winchControlCharacteristic?: BluetoothRemoteGATTCharacteristic;
 
   static get styles() {
     return css`
@@ -116,9 +117,18 @@ export class AppHome extends LitElement {
 
     console.log('Connecting');
 
-    this.bluetoothCharacteristics = await DeviceConnector.connect(this.handleGattDisconnect.bind(this));
+    const bluetoothCharacteristics = await DeviceConnector.connect(this.handleGattDisconnect.bind(this));
+    this.pitchRollCharacteristic = bluetoothCharacteristics[0];
+    this.winchControlCharacteristic = bluetoothCharacteristics[1];
 
     this.bleConnected = true;
+
+    this.pitchRollCharacteristic.addEventListener('characteristicvaluechanged', this.handlePitchRollChanged);
+
+    setTimeout(() => {
+      console.log('Starting to receive pitch roll change notifications');
+      this.pitchRollCharacteristic?.startNotifications();
+    }, 1000);
   }
 
   private async handleGattDisconnect() {
@@ -142,18 +152,38 @@ export class AppHome extends LitElement {
     this.deviceName = "";
   }
 
-  winchChange(event: Event) {
-    let sliderValue = event.target._value;
-    console.log("Winch control value " + sliderValue);
-    if (sliderValue == 0) {
-      console.log("Winch stop");
+  handlePitchRollChanged(event: Event) {
+    const data = event.target!.value;
+    const textDecoder = new TextDecoder('utf-8');
+    const value = textDecoder.decode(data.buffer);
 
-    } else if (sliderValue == -100) {
+    console.log("Pitch/roll value changed to " + value)
+
+    const parts = value.split(':');
+    this.pitch = parseFloat(parts[0]);
+    this.roll = parseFloat(parts[1]);
+
+    console.log("Pitch=" + this.pitch + " Roll=" + this.roll);
+  }
+
+  winchChange(event: Event) {
+    let sliderValue = event.target!.value;
+    console.log("Winch control slider value " + sliderValue);
+    const textEncoder = new TextEncoder();
+    if (sliderValue == -100) {
       console.log("Winch in");
+      const value = textEncoder.encode('in');
+      this.winchControlCharacteristic?.writeValue(value);
 
     } else if (sliderValue == 100) {
       console.log("Winch out");
+      const value = textEncoder.encode('out');
+      this.winchControlCharacteristic?.writeValue(value);
 
+    } else {
+      console.log("Winch stop");
+      const value = textEncoder.encode('stop');
+      this.winchControlCharacteristic?.writeValue(value);
     }
   }
 
