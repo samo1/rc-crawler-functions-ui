@@ -14,8 +14,8 @@ export class AppHome extends LitElement {
   @property() bleConnected = false;
   @property() deviceName = "";
 
-  @property() pitch = 0.0;
-  @property() roll = 0.0;
+  @property() pitch = -1.1;
+  @property() roll = -1.1;
 
   private pitchRollCharacteristic?: BluetoothRemoteGATTCharacteristic;
   private winchControlCharacteristic?: BluetoothRemoteGATTCharacteristic;
