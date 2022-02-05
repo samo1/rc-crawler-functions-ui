@@ -2,7 +2,7 @@
   "name": "RC crawler functions",
   "display": "standalone",
   "start_url": "/",
-  "short_name": "starter",
+  "short_name": "RC functions",
   "theme_color": "#E1477E",
   "description": "Control additional devices on RC rock crawler car, like a winch or inclinometer.",
   "orientation": "any",

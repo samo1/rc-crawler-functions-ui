@@ -210,12 +210,6 @@ export class AppHome extends LitElement {
             <p>
               Roll: ${this.roll}
             </p>
-
-            ${'share' in navigator
-              ? html`<fluent-button appearance="primary" @click="${this.share}"
-                  >Share this Starter!</fluent-button
-                >`
-              : null}
           </fluent-card>
 
           <fluent-card id="infoCard">
