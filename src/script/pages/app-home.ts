@@ -9,13 +9,18 @@ import { DeviceConnector } from '../device-connector';
 export class AppHome extends LitElement {
   // For more information on using properties and state in lit
   // check out this link https://lit.dev/docs/components/properties/
-  @property() message = '';
+  @property()
+  message = '';
 
-  @property() bleConnected = false;
-  @property() deviceName = "";
+  @property()
+  bleConnected = false;
+  @property()
+  deviceName = "";
 
-  @property() pitch = -1.1;
-  @property() roll = -1.1;
+  @property(({ type: Number }))
+  pitch = -1.1;
+  @property(({ type: Number }))
+  roll = -1.1;
 
   private pitchRollCharacteristic?: BluetoothRemoteGATTCharacteristic;
   private winchControlCharacteristic?: BluetoothRemoteGATTCharacteristic;
