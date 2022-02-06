@@ -18,9 +18,9 @@ export class AppHome extends LitElement {
   deviceName = "";
 
   @property(({ type: Number }))
-  pitch = -1.1;
+  pitch = 0.0;
   @property(({ type: Number }))
-  roll = -1.1;
+  roll = 0.0;
 
   private pitchRollCharacteristic?: BluetoothRemoteGATTCharacteristic;
   private winchControlCharacteristic?: BluetoothRemoteGATTCharacteristic;
@@ -206,9 +206,9 @@ export class AppHome extends LitElement {
             <h2>Device</h2>
             <fluent-button appearance="neutral" @click="${this.bleConnect}" ?disabled="${this.bleConnected}">Connect</fluent-button>
             <fluent-button appearance="neutral" @click="${this.bleDisconnect}" ?disabled="${!this.bleConnected}">Disconnect</fluent-button>
-            <span>
-              ${this.deviceName}
-            </span>
+            <div>
+              <span style="font-size: xx-small;">v1</span>
+            </div>
           </fluent-card>
 
           <fluent-card id="infoCard">
