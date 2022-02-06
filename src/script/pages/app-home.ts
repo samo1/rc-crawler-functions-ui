@@ -128,7 +128,11 @@ export class AppHome extends LitElement {
 
     this.bleConnected = true;
 
-    this.pitchRollCharacteristic.addEventListener('characteristicvaluechanged', this.handlePitchRollChanged);
+    const that = this;
+
+    this.pitchRollCharacteristic.addEventListener('characteristicvaluechanged', event => {
+      this.handlePitchRollChanged(that, event);
+    });
 
     setTimeout(() => {
       console.log('Starting to receive pitch roll change notifications');
@@ -157,7 +161,7 @@ export class AppHome extends LitElement {
     this.deviceName = "";
   }
 
-  handlePitchRollChanged(event: Event) {
+  handlePitchRollChanged(that: AppHome, event: Event) {
     const data = event.target!.value;
     const textDecoder = new TextDecoder('utf-8');
     const value = textDecoder.decode(data.buffer);
@@ -165,10 +169,10 @@ export class AppHome extends LitElement {
     console.log("Pitch/roll value changed to " + value)
 
     const parts = value.split(':');
-    this.pitch = parseFloat(parts[0]);
-    this.roll = parseFloat(parts[1]);
+    that.pitch = parseFloat(parts[0]);
+    that.roll = parseFloat(parts[1]);
 
-    console.log("Pitch=" + this.pitch + " Roll=" + this.roll);
+    console.log("Pitch=" + that.pitch + " Roll=" + that.roll);
   }
 
   winchChange(event: Event) {
